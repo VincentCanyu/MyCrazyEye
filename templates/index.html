@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div id="container" class="effect mainnav-lg navbar-fixed"> {# navbar-fixed使左上角图标固定 #}
+    {% csrf_token %}
+
+		<!--NAVBAR-->
+		<!--===================================================-->
+		<header id="navbar">
+			<div id="navbar-container" class="boxed" >
+
+				<!--Brand logo & name-->
+				<!--================================-->
+				<div class="navbar-header">
+					<a href="#" class="navbar-brand">
+						<img src="/static/img/eye_logo.png" alt="Nifty Logo" class="brand-icon">
+						<div class="brand-title">
+							<span class="brand-text"> &nbsp;&nbsp;CrazyEye</span>
+						</div>
+					</a>
+				</div>
+				<!--================================-->
+				<!--End brand logo & name-->
+
+
+				<!--Navbar Dropdown-->
+				<!--================================-->
+				<div class="navbar-content clearfix">
+					<ul class="nav navbar-top-links pull-left">
+
+						<!--Navigation toogle button-->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li class="tgl-menu-btn">
+							<a class="mainnav-toggle" href="#">
+								<i class="fa fa-navicon fa-lg"></i>
+							</a>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!--End Navigation toogle button-->
+
+					</ul>
+					<ul class="nav navbar-top-links pull-right">
+
+						<!--User dropdown-->
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<li id="dropdown-user" class="dropdown">
+							<a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
+								<span class="pull-right">
+									<img class="img-circle img-user media-object" src="/static/img/av1.png" alt="Profile Picture">
+								</span>
+								<div class="username hidden-xs">{{ request.user.name }}</div>
+							</a>
+
+
+							<div class="dropdown-menu dropdown-menu-md dropdown-menu-right with-arrow panel-default">
+
+								<!-- User dropdown menu -->
+								<ul class="head-list">
+									<li>
+										<a href="#">
+											<i class="fa fa-user fa-fw fa-lg"></i> 个人信息
+										</a>
+									</li>
+
+								</ul>
+
+								<!-- Dropdown footer -->
+								<div class="pad-all text-right">
+									<a href="/logout/" class="btn btn-primary">
+										<i class="fa fa-sign-out fa-fw"></i> Logout
+									</a>
+								</div>
+							</div>
+						</li>
+						<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+						<!--End user dropdown-->
+
+					</ul>
+				</div>
+				<!--================================-->
+				<!--End Navbar Dropdown-->
+
+			</div>
+		</header>
+		<!--===================================================-->
+		<!--END NAVBAR-->
+
+		<div class="boxed">
+
+			<!--CONTENT CONTAINER-->
+			<!--===================================================-->
+			<div id="content-container">
+
+				<!--Page Title-->
+				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+				<div id="page-title">
+					<h1 class="page-header text-overflow"></h1>
+
+					<!--Searchbox
+					<div class="searchbox">
+						<div class="input-group custom-search-form">
+							<input type="text" class="form-control" placeholder="Search..">
+							<span class="input-group-btn">
+								<button class="text-muted" type="button"><i class="fa fa-search"></i></button>
+							</span>
+						</div>
+					</div> -->
+				</div>
+				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+				<!--End page title-->
+				<!--Breadcrumb-->
+				<!--
+
+				<ol class="breadcrumb">
+					<li><a href="#">Home</a></li>
+					<li><a href="#">Library</a></li>
+					<li class="active">Data</li>
+				</ol>
+				-->
+				<!--End breadcrumb-->
+
+				<!--Page content-->
+				<!--===================================================-->
+				<div id="page-content">
+                {% block page-content %}
+                {% endblock %}
+				</div>
+				<!--===================================================-->
+				<!--End page content-->
+			</div>
+			<!--===================================================-->
+			<!--END CONTENT CONTAINER-->
+
+			<!--MAIN NAVIGATION-->
+			<!--===================================================-->
+			<nav id="mainnav-container" style="height: 111%">
+				<div id="mainnav">
+
+					<!--Shortcut buttons-->
+					<!--================================
+					<div id="mainnav-shortcut">
+						<ul class="list-unstyled">
+							<li class="col-xs-4" data-content="Shortcut 1">
+								<a class="shortcut-grid" href="#">
+									<i class="fa fa-car"></i>
+								</a>
+							</li>
+							<li class="col-xs-4" data-content="Shortcut 2">
+								<a class="shortcut-grid" href="#">
+									<i class="fa fa-taxi"></i>
+								</a>
+							</li>
+							<li class="col-xs-4" data-content="Shortcut 3">
+								<a class="shortcut-grid" href="#">
+									<i class="fa fa-bus"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					================================-->
+					<!--End shortcut buttons-->
+					<!--Menu-->
+					<!--================================-->
+					<div id="mainnav-menu-wrap">
+						<div class="nano">
+							<div class="nano-content">
+								<ul id="mainnav-menu" class="list-group">
+
+									<!--Menu list item-->
+									<li>
+										<a href="{% url 'web_ssh' %}">
+											<i class="fa fa-server"></i>
+											<span class="menu-title">
+												<strong>WEB SSH</strong>
+											</span>
+										</a>
+									</li>
+
+									<!--Menu list item-->
+									<li>
+										<a href="#">
+											<i class="fa fa-random"></i>
+											<span class="menu-title">
+												批量
+
+											</span>
+										</a>
+										<!--Submenu-->
+										<ul class="collapse">
+											<li><a href="{% url 'batch_cmd' %}">批量命令</a></li>
+											<li><a href="{% url 'file_transfer' %}">文件分发</a></li>
+
+										</ul>
+									</li>
+
+
+								</ul>
+
+
+
+							</div>
+						</div>
+					</div>
+					<!--================================-->
+					<!--End menu-->
+
+				</div>
+			</nav>
+			<!--===================================================-->
+			<!--END MAIN NAVIGATION-->
+
+		</div>
+
+
+
+		<!-- FOOTER -->
+		<!--===================================================-->
+		<footer id="footer">
+
+			<div class="hide-fixed pull-right pad-rgt">Currently v1.0</div>
+
+
+			<!--<p class="pad-lft">&#0169; 2015 CrazyEye ; Powered by OldBoy edu(老男孩IT教育).</p>-->
+
+
+		</footer>
+		<!--===================================================-->
+		<!-- END FOOTER -->
+
+
+		<!-- SCROLL TOP BUTTON -->
+		<!--===================================================-->
+		<button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
+		<!--===================================================-->
+
+
+
+	</div>
+	<!--===================================================-->
+	<!-- END OF CONTAINER -->
+{% endblock %}

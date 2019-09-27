@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block body %}
+	<div id="container" class="cls-container">
+		
+		<!-- BACKGROUND IMAGE -->
+		<!--===================================================-->
+		<div id="bg-overlay" ></div>
+		
+		
+		<!-- HEADER -->
+		<!--===================================================-->
+		<div class="cls-header cls-header-lg">
+			<div class="cls-brand">
+				<a class="box-inline" href="http://oldboyedu.com">
+					<!-- <img alt="Nifty Admin" src="img/logo.png" class="brand-icon"> -->
+
+                    <img src="/static/img/eye_logo.png" alt="Nifty Logo"  >
+
+                    <p>本软件由某某开源贡献</p>
+
+				</a>
+			</div>
+		</div>
+		<!--===================================================-->
+		
+		
+		<!-- LOGIN FORM -->
+		<!--===================================================-->
+		<div class="cls-content">
+			<div class="cls-content-sm panel">
+				<div class="panel-body">
+					<p class="pad-btm">欢迎使用CrazyEye堡垒机</p>
+
+					<form id="loginForm" method="POST"> {% csrf_token %}
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-user"></i></div>
+								<input type="text" class="form-control" name="username" placeholder="Email">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-addon"><i class="fa fa-asterisk"></i></div>
+								<input type="password" class="form-control" name="password" placeholder="Password">
+							</div>
+						</div>
+						<!--div class="row">
+							<div class="col-xs-8 text-left checkbox">
+								<label class="form-checkbox form-icon">
+								<input type="checkbox"> 记住我
+								</label>
+							</div>
+							<div class="col-xs-8">
+								<div class="form-group text-right">
+								<button class="btn btn-success text-uppercase" type="submit">登录</button>
+								</div>
+							</div>
+						</div>
+						<div class="mar-btm"><em>- or -</em></div-->
+						<button class="btn btn-success  btn-block" type="submit">
+							<b>登录</b>
+						</button>
+                        <input type="hidden" name="next" value="" />
+                        <h4 style="color: red"><b>{{ login_err }}</b></h4>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!--===================================================-->
+		
+
+		
+		
+	</div>
+{% endblock %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#loginForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            username_bak: {
+                message: 'The username is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The username is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 2,
+                        max: 30,
+                        message: 'The username must be more than 6 and less than 30 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_]+$/,
+                        message: 'The username can only consist of alphabetical, number and underscore'
+                    }
+                }
+            },
+            password:{
+                message: "The password is not valid",
+                validators:{
+                    notEmpty:{
+                        'message': "the password is required and cannot be empty"
+                    },
+                    stringLength:{
+                        min:3,
+                        max:30,
+                        message:'The username must be more than 6 and less than 30 characters long'
+                    },
+                }
+            },
+
+            username: {
+                validators: {
+                    notEmpty: {
+                        message: 'The email is required and cannot be empty'
+                    },
+                    emailAddress: {
+                        message: 'The input is not a valid email address'
+                    }
+                }
+            }
+        }
+    });
+});
+
+</script>

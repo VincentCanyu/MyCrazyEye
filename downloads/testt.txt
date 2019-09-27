@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+import threading
+
+def loop():
+    print('thread name ',threading.current_thread().name)
+
+t=threading.Thread(target=loop)
+t.start()
+print('thread name',threading.current_thread().name)

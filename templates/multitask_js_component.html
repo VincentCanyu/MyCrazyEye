@@ -1,0 +1,173 @@
+<script>
+
+    function ItemToggle(ele){ //实现主机组列表的下拉式
+
+        $(ele).next().toggle();
+
+    }
+
+
+    function CheckFileTransferType(ele){
+		if($(ele).val()=='send'){  //如果是上传到远程服务器，本地路径清除hide属性，即必须填写本地文件路径
+			$('#local_file_path').removeClass('hide');
+			}else{
+			$('#local_file_path').addClass('hide');	 //如果是从远程服务器下载文件到本地，本地路径不需要写，即添加hide属性。隐藏掉
+				}
+		}
+
+
+    function PostTask(self,task_type){
+		
+        var selected_host_ids = [];
+
+        $("[tag='host-select']:checked").each(function () {
+
+            selected_host_ids.push($(this).val());
+
+        })
+
+        if (selected_host_ids.length == 0){
+
+            alert("必须选择主机！");
+
+            return false;
+
+        }
+        
+        var task_arguments = {};
+        
+        if (task_type=='cmd'){
+			var cmd_text = $("#cmd_input").val().trim(); //.trim()去除空格
+			
+			if (cmd_text.length == 0){
+
+            alert("必须要输入要执行的命令！");
+
+            return false;
+
+        }
+        var task_arguments = {
+
+            'selected_hosts':selected_host_ids,
+
+            'task_type':'cmd',
+
+            'cmd':cmd_text
+
+        }
+			}else{
+				var local_file_path = $('#local_file_path').val().trim();
+				var remote_file_path = $('#remote_file_path').val().trim();
+				var file_transfer_type = $('#file_transfer_type').val();
+				if(file_transfer_type == 'send'){
+					if(local_file_path.length==0){
+						alert('必须输入要上传到服务器的本地文件路径！');
+						return false;
+						}
+					}
+			
+				if(remote_file_path.length==0){
+					alert('必须输入远程服务器的文件路径！');
+					return false;
+					}
+				
+				var task_arguments = {
+
+				'selected_hosts':selected_host_ids,
+
+				'task_type':'file_transfer',
+
+				'file_transfer_type':file_transfer_type,
+				'local_file_path':local_file_path,
+				'remote_file_path':remote_file_path
+
+        }
+				}
+
+
+
+        //禁用提交按钮
+
+        $(self).addClass('disabled');
+
+        $("#task_result_container").empty(); //清空之前的任务结果
+
+
+
+        var csrftoken = $("input[name='csrfmiddlewaretoken']").val() //为避免csrf错误，在<div class="row">上边一行加上csrf，在此处取到值，一起带到后端。
+
+        $.post("{% url 'batch_task_mgr' %}", {'task_data':JSON.stringify(task_arguments),'csrfmiddlewaretoken':csrftoken}, function(callback){  //$.post类似于$.ajax，而且是以post形式提交
+
+            console.log("task callback:",callback); //callback就是后端返回的值
+
+            var callback = JSON.parse(callback);
+
+            $.each(callback.selected_hosts,function(index,ele){
+
+                var li_ele = "<li log_id='" + ele['id'] + "'>-----Host:" + ele.host_to_remote_user__host__name + "(" + ele.host_to_remote_user__host__ip_addr + ")--------<span tag='log_status'></span></li>"
+
+                li_ele += "<pre>waiting for result</pre>";
+
+                $("#task_result_container").append(li_ele);
+
+            })
+
+
+
+            //start to get result ....
+
+            ResultRefreshObj = setInterval(function(){ //声明变量时 可以不用var。如果不用var 那么它是全局变量。方便关闭定时器。
+
+                GetTaskResult(callback.task_id);
+
+            },2000);  //定时器，2秒执行一次GetTaskResult函数
+
+        });
+
+    }
+
+
+
+    function GetTaskResult(task_id){
+
+        $.getJSON("{% url 'get_task_result' %}",{'task_id':task_id},function(callback){ //$.getJSON是get请求的Ajax，且后端传来的数据直接被反序列化
+
+            console.log('result_callback:',callback);
+
+
+
+            var all_task_done = true;
+
+
+
+            $.each(callback,function(index,ele){
+
+                var li_ele = $("li[log_id="+ele['id']+"]");
+
+                li_ele.children().first().text(ele['status']);   //360浏览器只能取到（显示）成功的状态和结果。连接错误和出现异常的，定时器会不断的取值，但是取不到，尽管数据库已经更新完成了。
+
+                li_ele.next().text(ele['result']);
+
+                if(ele['status'] == 0){
+
+                    all_task_done = false; //有任务没有完成
+
+                }
+
+            })
+
+            if(all_task_done){ //任务完成，关闭定时器
+
+                clearInterval(ResultRefreshObj);
+
+                $("#task_submit_btn").removeClass("disabled");
+
+                console.log("---------all task done------------");
+
+            }
+
+        });
+
+    }
+
+</script>
